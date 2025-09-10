@@ -20,10 +20,10 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
 
     public async Task DeleteAsync(int id)
     {
-        var entity = GetByIdAsync(id);
+        var entity = await GetByIdAsync(id);
         if (entity != null)
         {
-            _appDbContext.Set<T>().Remove(entity.Result!);
+            _appDbContext.Set<T>().Remove(entity);
             await _appDbContext.SaveChangesAsync();
         }
     }
