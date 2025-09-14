@@ -32,4 +32,16 @@ public class CategoryController : ControllerBase
         await _categoryService.AddAsync(categoryDto);
         return CreatedAtAction(nameof(GetById), new { id = categoryDto.Id }, categoryDto);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var existingCategory = await _categoryService.GetByIdAsync(id);
+        if (existingCategory == null)
+        {
+            return NotFound();
+        }
+        await _categoryService.DeleteAsync(id);
+        return NoContent();
+    }
 }

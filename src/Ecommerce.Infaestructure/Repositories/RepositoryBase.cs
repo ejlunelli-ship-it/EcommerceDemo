@@ -37,9 +37,10 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         return await _appDbContext.Set<T>().FindAsync(id);
     }
+    
     public void Update(T entity)
     {
-      _appDbContext.Set<T>().Update(entity);
+       _appDbContext.Set<T>().Update(entity);
     }
 
     public async Task SaveChangesAsync()

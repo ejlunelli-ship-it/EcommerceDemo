@@ -1,31 +1,51 @@
-﻿using Ecommerce.Application.Dtos;
+﻿using AutoMapper;
+using Ecommerce.Application.Dtos;
 using Ecommerce.Application.Interfaces;
+using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Repositories;
 
 namespace Ecommerce.Application.Services;
 public class ProductService : IProductService
 {
-    public Task AddAsync(ProductDto entity)
+    private readonly IProductRepository _productRepository;
+    private readonly IMapper _mapper;
+
+    public ProductService(IProductRepository productRepository, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _productRepository = productRepository;
+        _mapper = mapper;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task AddAsync(ProductDto entity)
     {
-        throw new NotImplementedException();
+        var product = _mapper.Map<Product>(entity);
+        await _productRepository.AddAsync(product);
     }
 
-    public Task<IEnumerable<ProductDto>> GetAllAsync()
+    public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var product = await _productRepository.GetByIdAsync(id);
+        if (product is null)
+            throw new Exception("The product does not exist");
+        await _productRepository.DeleteAsync(id);
     }
 
-    public Task<ProductDto?> GetByIdAsync(int id)
+    public async Task<IEnumerable<ProductDto>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var products = await _productRepository.GetAllAsync();
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
     }
 
-    public Task UpdateAsync(ProductDto entity)
+    public async Task<ProductDto?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var product = await _productRepository.GetByIdAsync(id);
+        return _mapper.Map<ProductDto>(product);
+    }
+
+    public async Task UpdateAsync(ProductDto entity)
+    {
+        var product = _mapper.Map<Product>(entity);
+        _productRepository.Update(product);
+        await _productRepository.SaveChangesAsync();
     }
 }
