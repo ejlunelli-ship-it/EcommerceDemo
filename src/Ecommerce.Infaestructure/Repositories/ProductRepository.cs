@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Repositories;
+using Ecommerce.Infaestructure.Data;
 
 namespace Ecommerce.Infaestructure.Repositories;
-internal class ProductRepository
+public class ProductRepository : RepositoryBase<Product>, IProductRepository
 {
+    public ProductRepository(AppDbContext appDbContext) : base(appDbContext)
+    {
+    }
 }
