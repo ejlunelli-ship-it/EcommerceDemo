@@ -7,45 +7,47 @@ using Ecommerce.Domain.Repositories;
 namespace Ecommerce.Application.Services;
 public class OrderService : IOrderService
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public OrderService(IOrderRepository orderRepository, IMapper mapper)
+    public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _orderRepository = orderRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     public async Task AddAsync(OrderDto entity)
     {
         var order = _mapper.Map<Order>(entity);
-        await _orderRepository.AddAsync(order);
+        await _unitOfWork.Orders.AddAsync(order);
+        await _unitOfWork.ComitAsync();
     }
 
     public async Task DeleteAsync(int id)
     {
-        var order = await _orderRepository.GetByIdAsync(id);
+        var order = await _unitOfWork.Orders.GetByIdAsync(id);
         if (order is null)
             throw new Exception("The order does not exist");
-        await _orderRepository.DeleteAsync(id);
+        await _unitOfWork.DeleteOrderWithProductsAsync(id);
+        await _unitOfWork.ComitAsync();
     }
 
     public async Task<IEnumerable<OrderDto>> GetAllAsync()
     {
-        var orders = await _orderRepository.GetAllAsync();
+        var orders = await _unitOfWork.Orders.GetAllAsync();
         return _mapper.Map<IEnumerable<OrderDto>>(orders);
     }
 
     public async Task<OrderDto?> GetByIdAsync(int id)
     {
-        var order = await _orderRepository.GetByIdAsync(id);
+        var order = await _unitOfWork.Orders.GetByIdAsync(id);
         return _mapper.Map<OrderDto>(order);
     }
 
     public async Task UpdateAsync(OrderDto entity)
     {
         var order = _mapper.Map<Order>(entity);
-        _orderRepository.Update(order);
-        await _orderRepository.SaveChangesAsync();
+        _unitOfWork.Orders.Update(order);
+        await _unitOfWork.ComitAsync();
     }
 }

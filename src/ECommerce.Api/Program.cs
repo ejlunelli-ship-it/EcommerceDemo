@@ -4,6 +4,7 @@ using Ecommerce.Application.Services;
 using Ecommerce.Domain.Repositories;
 using Ecommerce.Infaestructure.Data;
 using Ecommerce.Infaestructure.Repositories;
+using Ecommerce.Infaestructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -31,11 +32,12 @@ public class Program
                 builder.Configuration.GetConnectionString("DefaultConnection"))
         );
 
-        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "ECommerceDemo", Version = "v1" });
         });
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -49,10 +51,6 @@ public class Program
         builder.Services.AddScoped<IOrderProductService, OrderProductService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-        // Register your services
-        builder.Services.AddScoped<ICategoryService, CategoryService>();
-        // Adicione outros serviços conforme necessário
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline
@@ -62,7 +60,6 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();
 

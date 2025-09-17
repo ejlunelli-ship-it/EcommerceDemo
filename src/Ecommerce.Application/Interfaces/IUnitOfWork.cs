@@ -5,4 +5,6 @@ public interface IUnitOfWork : IDisposable
 {
     IOrderRepository Orders { get; }
     IOrderProductRepository OrderProducts { get; }
+    Task DeleteOrderWithProductsAsync(int orderId);
+    Task<int> ComitAsync();
 }

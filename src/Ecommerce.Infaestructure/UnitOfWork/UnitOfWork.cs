@@ -19,6 +19,19 @@ public class UnitOfWork : IUnitOfWork
         OrderProducts = orderProducts;
     }
 
+    public async Task DeleteOrderWithProductsAsync(int orderId)
+    {
+        var orderProducts = await OrderProducts.GetAllAsync();
+        var relatedOrderProducts = orderProducts.Where(op => op.OrderId == orderId);
+
+        foreach (var orderProduct in relatedOrderProducts)
+        {
+            await OrderProducts.DeleteAsync(orderProduct.Id);
+        }
+
+        await Orders.DeleteAsync(orderId);
+    }
+
     public async Task<int> ComitAsync(){
         
         return await _appDbContext.SaveChangesAsync();
