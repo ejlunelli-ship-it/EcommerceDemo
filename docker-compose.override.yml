@@ -1,0 +1,10 @@
+services:
+  ecommerce.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "5100:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${USERPROFILE}/.aspnet/https:/home/app/.aspnet/https:ro

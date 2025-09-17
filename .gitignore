@@ -361,3 +361,14 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Visual Studio Docker compose files (VS specific)
+docker-compose.vs.debug.yml
+docker-compose.vs.release.yml
+
+# launchSettings.json in root (should be in Properties folder)
+launchSettings.json
+
+# Custom validation scripts
+*validate*.ps1
+*find-available-ports*.ps1
