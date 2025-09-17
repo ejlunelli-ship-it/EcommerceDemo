@@ -21,8 +21,6 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="find-available-ports.ps1" />
     <None Include="README-Docker.md" />
-    <None Include="validate-docker-compose.ps1" />
   </ItemGroup>
 </Project>

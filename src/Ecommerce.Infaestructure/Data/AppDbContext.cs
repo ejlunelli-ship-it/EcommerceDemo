@@ -18,6 +18,11 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Configure Product Price precision
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Price)
+            .HasPrecision(18, 2);
+
         modelBuilder.Entity<Order>()
             .HasOne(o => o.Customer)
             .WithMany(c => c.Orders)
